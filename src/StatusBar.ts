@@ -1,4 +1,9 @@
-import { getWordCount, getCharacterCount, getSentenceCount } from "src/StatUtils";
+import {
+  getWordCount,
+  getCharacterCount,
+  getSentenceCount,
+  getBulletCount,
+} from "src/StatUtils";
 import { debounce } from "obsidian";
 
 export default class StatusBar {
@@ -22,10 +27,13 @@ export default class StatusBar {
     const words = getWordCount(text);
     const characters = getCharacterCount(text);
     const sentences = getSentenceCount(text);
-    this.displayText(`${words} words ${characters} characters ${sentences} sentences`);
+    const bullets = getBulletCount(text);
+    this.displayText(
+      `${words} words ${characters} characters ${sentences} sentences ${bullets} bullets`
+    );
   }
 
   updateAltBar() {
-    this.displayText("0 words 0 characters 0 sentences");
+    this.displayText("0 words 0 characters 0 sentences 0 bullets");
   }
 }

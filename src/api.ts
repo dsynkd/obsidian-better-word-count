@@ -1,6 +1,11 @@
 import { TFile, normalizePath } from "obsidian";
 import type BetterWordCount from "src/main";
-import { getCharacterCount, getSentenceCount, getWordCount } from "src/StatUtils";
+import {
+  getBulletCount,
+  getCharacterCount,
+  getSentenceCount,
+  getWordCount,
+} from "src/StatUtils";
 
 export default class BetterWordCountApi {
   private plugin: BetterWordCount;
@@ -19,6 +24,10 @@ export default class BetterWordCountApi {
 
   public getSentenceCount(text: string): number {
     return getSentenceCount(text);
+  }
+
+  public getBulletCount(text: string): number {
+    return getBulletCount(text);
   }
 
   private async countPagePath(path: string, countFunc: (text: string) => number): Promise<number | null> {
@@ -43,5 +52,9 @@ export default class BetterWordCountApi {
 
   public getSentenceCountPagePath(path: string): Promise<number | null> {
     return this.countPagePath(path, getSentenceCount);
+  }
+
+  public getBulletCountPagePath(path: string): Promise<number | null> {
+    return this.countPagePath(path, getBulletCount);
   }
 }

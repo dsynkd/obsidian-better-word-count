@@ -33,3 +33,14 @@ export function getSentenceCount(text: string): number {
 
   return sentences;
 }
+
+/** Unordered Markdown list lines (-, *, +) with a space or tab after the marker. */
+export function getBulletCount(text: string): number {
+  let count = 0;
+  for (const line of (text || "").split(/\r?\n/)) {
+    if (/^\s*[-*+]\s/.test(line)) {
+      count++;
+    }
+  }
+  return count;
+}
