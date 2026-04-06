@@ -2,8 +2,6 @@ import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import copy from "rollup-plugin-copy";
-import svelte from "rollup-plugin-svelte";
-import sveltePreprocess from "svelte-preprocess";
 const TEST_VAULT = "test-vault/.obsidian/plugins/better-word-count";
 
 export default {
@@ -44,17 +42,10 @@ export default {
   ],
   plugins: [
     typescript({
-      // Default globs use `*.ts+(|x)` which micromatch does not match nested paths (e.g. src/main.ts),
-      // so the plugin never loads TS and Rollup parses `import type` as invalid JS.
       include: ["**/*.ts", "**/*.tsx"],
     }),
     nodeResolve({ browser: true }),
     commonjs(),
-    svelte({
-      include: "src/**/*.svelte",
-      compilerOptions: { css: true },
-      preprocess: sveltePreprocess(),
-    }),
     copy({
       targets: [
         { src: "src/styles.css", dest: TEST_VAULT },
