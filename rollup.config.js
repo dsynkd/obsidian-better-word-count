@@ -43,7 +43,11 @@ export default {
     "@lezer/lr",
   ],
   plugins: [
-    typescript(),
+    typescript({
+      // Default globs use `*.ts+(|x)` which micromatch does not match nested paths (e.g. src/main.ts),
+      // so the plugin never loads TS and Rollup parses `import type` as invalid JS.
+      include: ["**/*.ts", "**/*.tsx"],
+    }),
     nodeResolve({ browser: true }),
     commonjs(),
     svelte({
