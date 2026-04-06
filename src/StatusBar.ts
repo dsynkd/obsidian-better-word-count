@@ -5,13 +5,18 @@ import {
   getBulletCount,
 } from "src/StatUtils";
 import { debounce } from "obsidian";
+import type BetterWordCount from "./main";
 
 export default class StatusBar {
   private statusBarEl: HTMLElement;
+  private plugin: BetterWordCount;
+  /** `null` when the active view is not markdown (show zero counts). */
+  private lastText: string | null = null;
   public debounceStatusBarUpdate;
 
-  constructor(statusBarEl: HTMLElement) {
+  constructor(statusBarEl: HTMLElement, plugin: BetterWordCount) {
     this.statusBarEl = statusBarEl;
+    this.plugin = plugin;
     this.debounceStatusBarUpdate = debounce(
       (text: string) => this.updateStatusBar(text),
       20,
@@ -23,17 +28,36 @@ export default class StatusBar {
     this.statusBarEl.setText(text);
   }
 
+  private formatStatusBar(text: string): string {
+    const s = this.plugin.settings;
+    const parts: string[] = [];
+    if (s.countWords) {
+      parts.push(`${getWordCount(text)} words`);
+    }
+    if (s.countCharacters) {
+      parts.push(`${getCharacterCount(text)} characters`);
+    }
+    if (s.countSentences) {
+      parts.push(`${getSentenceCount(text)} sentences`);
+    }
+    if (s.countBulletPoints) {
+      parts.push(`${getBulletCount(text)} bullet points`);
+    }
+    return parts.join("   ");
+  }
+
   updateStatusBar(text: string) {
-    const words = getWordCount(text);
-    const characters = getCharacterCount(text);
-    const sentences = getSentenceCount(text);
-    const bullets = getBulletCount(text);
-    this.displayText(
-      `${words} words ${characters} characters ${sentences} sentences ${bullets} bullets`
-    );
+    this.lastText = text;
+    this.displayText(this.formatStatusBar(text));
   }
 
   updateAltBar() {
-    this.displayText("0 words 0 characters 0 sentences 0 bullets");
+    this.lastText = null;
+    this.displayText(this.formatStatusBar(""));
+  }
+
+  /** Re-apply settings to the current status bar text (e.g. after toggles change). */
+  refreshDisplay(): void {
+    this.displayText(this.formatStatusBar(this.lastText ?? ""));
   }
 }

@@ -2,8 +2,11 @@ import { Plugin, WorkspaceLeaf } from "obsidian";
 import StatusBar from "./StatusBar";
 import { pluginField, statusBarEditorPlugin } from "./EditorPlugin";
 import BetterWordCountApi from "src/api";
+import { DEFAULT_SETTINGS, type BetterWordCountSettings } from "./settings";
+import BetterWordCountSettingTab from "./BetterWordCountSettingTab";
 
 export default class BetterWordCount extends Plugin {
+  public settings: BetterWordCountSettings;
   public statusBar: StatusBar;
   public api: BetterWordCountApi = new BetterWordCountApi(this);
 
@@ -11,9 +14,21 @@ export default class BetterWordCount extends Plugin {
     this.statusBar = null;
   }
 
+  async loadSettings(): Promise<void> {
+    this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+  }
+
+  async saveSettings(): Promise<void> {
+    await this.saveData(this.settings);
+  }
+
   async onload() {
+    await this.loadSettings();
+
     const statusBarEl = this.addStatusBarItem();
-    this.statusBar = new StatusBar(statusBarEl);
+    this.statusBar = new StatusBar(statusBarEl, this);
+
+    this.addSettingTab(new BetterWordCountSettingTab(this.app, this));
 
     this.registerEditorExtension([pluginField.init(() => this), statusBarEditorPlugin]);
 
