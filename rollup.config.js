@@ -9,7 +9,7 @@ const TEST_VAULT = "test-vault/.obsidian/plugins/better-word-count";
 export default {
   input: "src/main.ts",
   output: {
-    dir: "dist/",
+    file: "main.js",
     sourcemap: "inline",
     format: "cjs",
     exports: "default",
@@ -58,7 +58,7 @@ export default {
     copy({
       targets: [
         { src: "src/styles.css", dest: TEST_VAULT },
-        { src: "dist/main.js", dest: TEST_VAULT },
+        { src: "main.js", dest: TEST_VAULT },
         { src: ["manifest.json"], dest: TEST_VAULT },
       ],
       flatten: true,
