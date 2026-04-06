@@ -25,8 +25,15 @@ export default class BetterWordCount extends Plugin {
   async onload() {
     await this.loadSettings();
 
-    const statusBarEl = this.addStatusBarItem();
-    this.statusBar = new StatusBar(statusBarEl, this);
+    this.statusBar = new StatusBar(
+      {
+        words: this.addStatusBarItem(),
+        characters: this.addStatusBarItem(),
+        sentences: this.addStatusBarItem(),
+        bullets: this.addStatusBarItem(),
+      },
+      this
+    );
 
     this.addSettingTab(new BetterWordCountSettingTab(this.app, this));
 

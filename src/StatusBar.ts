@@ -7,15 +7,22 @@ import {
 import { debounce } from "obsidian";
 import type BetterWordCount from "./main";
 
+export interface StatusBarItemElements {
+  words: HTMLElement;
+  characters: HTMLElement;
+  sentences: HTMLElement;
+  bullets: HTMLElement;
+}
+
 export default class StatusBar {
-  private statusBarEl: HTMLElement;
+  private readonly items: StatusBarItemElements;
   private plugin: BetterWordCount;
   /** `null` when the active view is not markdown (show zero counts). */
   private lastText: string | null = null;
   public debounceStatusBarUpdate;
 
-  constructor(statusBarEl: HTMLElement, plugin: BetterWordCount) {
-    this.statusBarEl = statusBarEl;
+  constructor(items: StatusBarItemElements, plugin: BetterWordCount) {
+    this.items = items;
     this.plugin = plugin;
     this.debounceStatusBarUpdate = debounce(
       (text: string) => this.updateStatusBar(text),
@@ -24,40 +31,43 @@ export default class StatusBar {
     );
   }
 
-  displayText(text: string) {
-    this.statusBarEl.setText(text);
+  private setItem(el: HTMLElement, enabled: boolean, label: string): void {
+    if (enabled) {
+      el.style.removeProperty("display");
+      el.setText(label);
+    } else {
+      el.style.display = "none";
+    }
   }
 
-  private formatStatusBar(text: string): string {
+  private renderCounts(text: string): void {
     const s = this.plugin.settings;
-    const parts: string[] = [];
-    if (s.countWords) {
-      parts.push(`${getWordCount(text)} words`);
-    }
-    if (s.countCharacters) {
-      parts.push(`${getCharacterCount(text)} characters`);
-    }
-    if (s.countSentences) {
-      parts.push(`${getSentenceCount(text)} sentences`);
-    }
-    if (s.countBulletPoints) {
-      parts.push(`${getBulletCount(text)} bullet points`);
-    }
-    return parts.join("   ");
+    this.setItem(this.items.words, s.countWords, `${getWordCount(text)} words`);
+    this.setItem(
+      this.items.characters,
+      s.countCharacters,
+      `${getCharacterCount(text)} characters`
+    );
+    this.setItem(this.items.sentences, s.countSentences, `${getSentenceCount(text)} sentences`);
+    this.setItem(
+      this.items.bullets,
+      s.countBulletPoints,
+      `${getBulletCount(text)} bullet points`
+    );
   }
 
   updateStatusBar(text: string) {
     this.lastText = text;
-    this.displayText(this.formatStatusBar(text));
+    this.renderCounts(text);
   }
 
   updateAltBar() {
     this.lastText = null;
-    this.displayText(this.formatStatusBar(""));
+    this.renderCounts("");
   }
 
   /** Re-apply settings to the current status bar text (e.g. after toggles change). */
   refreshDisplay(): void {
-    this.displayText(this.formatStatusBar(this.lastText ?? ""));
+    this.renderCounts(this.lastText ?? "");
   }
 }
