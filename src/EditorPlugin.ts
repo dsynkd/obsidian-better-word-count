@@ -1,5 +1,6 @@
 import { StateField, Transaction } from "@codemirror/state";
 import { ViewUpdate, PluginValue, EditorView, ViewPlugin } from "@codemirror/view";
+import { stripYamlFrontmatter } from "src/StatUtils";
 import type BetterWordCount from "src/main";
 
 export const pluginField = StateField.define<BetterWordCount>({
@@ -57,7 +58,9 @@ class StatusBarEditorPlugin implements PluginValue {
       tr.isUserEvent("redo") ||
       tr.isUserEvent("select")
     ) {
-      plugin.statusBar.debounceStatusBarUpdate(readFullDoc(tr.newDoc));
+      plugin.statusBar.debounceStatusBarUpdate(
+        stripYamlFrontmatter(readFullDoc(tr.newDoc))
+      );
     }
   }
 

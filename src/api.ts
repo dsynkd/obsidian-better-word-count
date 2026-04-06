@@ -5,6 +5,7 @@ import {
   getCharacterCount,
   getSentenceCount,
   getWordCount,
+  stripYamlFrontmatter,
 } from "src/StatUtils";
 
 export default class BetterWordCountApi {
@@ -35,7 +36,7 @@ export default class BetterWordCountApi {
     const file = this.plugin.app.vault.getAbstractFileByPath(normalizedPath);
 
     if (file instanceof TFile) {
-      const text = await this.plugin.app.vault.cachedRead(file);
+      const text = stripYamlFrontmatter(await this.plugin.app.vault.cachedRead(file));
       return countFunc(text);
     }
 
