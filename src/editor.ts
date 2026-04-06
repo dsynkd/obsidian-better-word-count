@@ -1,6 +1,6 @@
 import { StateField, Transaction } from "@codemirror/state";
 import { ViewUpdate, PluginValue, EditorView, ViewPlugin } from "@codemirror/view";
-import { stripYamlFrontmatter } from "src/StatUtils";
+import { stripYamlFrontmatter } from "src/utils";
 import type BetterWordCount from "src/main";
 
 export const pluginField = StateField.define<BetterWordCount>({

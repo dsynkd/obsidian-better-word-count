@@ -3,7 +3,7 @@ import {
   getCharacterCount,
   getSentenceCount,
   getBulletCount,
-} from "src/StatUtils";
+} from "src/utils";
 import { debounce } from "obsidian";
 import type BetterWordCount from "./main";
 

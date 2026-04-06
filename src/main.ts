@@ -1,9 +1,12 @@
 import { Plugin, WorkspaceLeaf } from "obsidian";
 import StatusBar from "./StatusBar";
-import { pluginField, statusBarEditorPlugin } from "./EditorPlugin";
+import { pluginField, statusBarEditorPlugin } from "./editor";
 import BetterWordCountApi from "src/api";
-import { DEFAULT_SETTINGS, type BetterWordCountSettings } from "./settings";
-import BetterWordCountSettingTab from "./BetterWordCountSettingTab";
+import {
+  BetterWordCountSettingTab,
+  DEFAULT_SETTINGS,
+  type BetterWordCountSettings,
+} from "./settings";
 
 export default class BetterWordCount extends Plugin {
   public settings: BetterWordCountSettings;

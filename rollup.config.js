@@ -1,8 +1,6 @@
 import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
-import copy from "rollup-plugin-copy";
-const TEST_VAULT = "test-vault/.obsidian/plugins/better-word-count";
 
 export default {
   input: "src/main.ts",
@@ -46,13 +44,5 @@ export default {
     }),
     nodeResolve({ browser: true }),
     commonjs(),
-    copy({
-      targets: [
-        { src: "src/styles.css", dest: TEST_VAULT },
-        { src: "main.js", dest: TEST_VAULT },
-        { src: ["manifest.json"], dest: TEST_VAULT },
-      ],
-      flatten: true,
-    }),
   ],
 };

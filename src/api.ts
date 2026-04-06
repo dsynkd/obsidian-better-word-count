@@ -6,7 +6,7 @@ import {
   getSentenceCount,
   getWordCount,
   stripYamlFrontmatter,
-} from "src/StatUtils";
+} from "src/utils";
 
 export default class BetterWordCountApi {
   private plugin: BetterWordCount;
